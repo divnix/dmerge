@@ -38,7 +38,13 @@
               rhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath rhs);
             in "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}";
           in
-          if isSingleton then head values
+          if (isSingleton && isFunction (head values)) then abort ''
+
+            a fresh right-hand-side cannot be an array merge function
+            at '${concatStringsSep "." here'}':
+              - rhs: ${typeOf rhs'} @ ${rhsFilePos}
+          ''
+          else if isSingleton then head values
           else if !(isAttrs lhs' && isAttrs rhs')
           then
             if (typeOf lhs') != (typeOf rhs') && !(isList lhs' && isFunction rhs')
