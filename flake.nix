@@ -34,6 +34,7 @@
             rhs' = head values;
             lhs' = head (tail values);
             isSingleton = tail values == [];
+            singleton = head values;
             lhsFilePos = let
               lhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath lhs);
             in "${lhsPos.file}:${toString lhsPos.line}:${toString lhsPos.column}";
@@ -41,7 +42,7 @@
               rhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath rhs);
             in "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}";
           in
-            if (isSingleton && isFunction (head values))
+            if (isSingleton && isFunction singleton)
             then
               abort ''
 
@@ -50,7 +51,10 @@
                   - rhs: ${typeOf rhs'} @ ${rhsFilePos}
               ''
             else if isSingleton
-            then head values
+            then
+              if (isAttrs singleton) # descend if it's an attrset
+              then f here' [{} singleton]
+              else singleton
             else if !(isAttrs lhs' && isAttrs rhs')
             then
               if (typeOf lhs') != (typeOf rhs') && !(isList lhs' && isFunction rhs')
