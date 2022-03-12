@@ -98,12 +98,73 @@
         );
     in
       f here [rhs lhs];
+
+    decorateAt = here: lhs: rhs: let
+      inherit (builtins) isAttrs hasAttr head tail typeOf concatStringsSep tryEval;
+      inherit (nixlib.lib) zipAttrsWith isList isFunction getAttrFromPath;
+
+      f = attrPath: rhs_: lhs_:
+        zipAttrsWith (
+          n: values: let
+            here' = attrPath ++ [n];
+            rhs' = head values;
+            lhs' = head (tail values);
+            isSingleton = tail values == [];
+            singleton = head values;
+            lhsFilePos = let
+              lhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath lhs);
+            in "${lhsPos.file}:${toString lhsPos.line}:${toString lhsPos.column}";
+            rhsFilePos = let
+              rhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath rhs);
+            in "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}";
+          in
+            if isSingleton
+            then
+              if hasAttr n rhs_ # rhs-singleton
+              then
+                abort ''
+
+                  you can only decorate existing attr paths, the following doesn't exist in the decorated attrs
+                  at '${concatStringsSep "." here'}':
+                    - decor: ${typeOf rhs'} @ ${rhsFilePos}
+                ''
+              else singleton # lhs-singleton
+            else if !(isAttrs lhs' && isAttrs rhs')
+            then
+              if (isList lhs' && isFunction rhs')
+              then rhs' lhs'
+              else
+                abort ''
+
+                  The only thing you can do is to decorate an attrs' list with a function decorator at '${concatStringsSep "." here'}':
+                  - attrs: ${typeOf lhs'} @ ${lhsFilePos}
+                  - decor: ${typeOf rhs'} @ ${rhsFilePos}
+
+                  Available array merge functions decorators:
+                  - data-merge.update [ idx ... ]
+                  - data-merge.append
+                ''
+            else f here' rhs' lhs'
+        )
+        [rhs_ lhs_];
+    in
+      f here rhs lhs;
   in
     with yants "data-merge"; {
       # ------
+      # decorate
+      # ------
+      decorate = rhs: dec:
+        builtins.deepSeq
+        (decorateAt [] rhs dec) (decorateAt [] rhs dec);
+      # ------
+
+      # ------
       # merge
       # ------
-      merge = mergeAt [];
+      merge = lhs: rhs:
+        builtins.deepSeq
+        (mergeAt [] lhs rhs) (mergeAt [] lhs rhs);
       # ------
 
       # ------
