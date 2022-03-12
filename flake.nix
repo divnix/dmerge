@@ -1,9 +1,11 @@
 {
   description = "A mini merge DSL for data overlays";
   inputs.nixlib.url = "github:nix-community/nixpkgs.lib";
+  inputs.yants.url = "github:divnix/yants";
   outputs = {
     self,
     nixlib,
+    yants,
   }: let
     # Incrementality of the Data Spine
     # --------------------------------
@@ -92,52 +94,53 @@
         );
     in
       f here [rhs lhs];
-  in {
-    merge = mergeAt [];
+  in
+    with yants "data-merge"; {
+      # ------
+      # merge
+      # ------
+      merge = mergeAt [];
+      # ------
 
-    append = new: orig: _: let
-      inherit (builtins) isList typeOf concatStringsSep;
-      inherit (nixlib.lib) assertMsg;
-    in
-      assert assertMsg (isList new) ''
-        APPENDING ARRAY MERGE: argument must be a list, got: ${typeOf new}'';
-        orig ++ new;
+      # ------
+      # append
+      # ------
+      append = new: orig: here: orig ++ (list any new);
+      # ------
 
-    update = indices: updates: orig: here: let
-      inherit (builtins) isList all isInt length typeOf listToAttrs elemAt hasAttr concatStringsSep;
-      inherit (nixlib.lib) zipListsWith imap0 assertMsg traceSeqN;
-    in
-      assert assertMsg (isList indices) ''
-        UPDATING ARRAY MERGE: first argument must be a list, got: ${typeOf indices}'';
-      assert assertMsg (isList updates) ''
-        UPDATING ARRAY MERGE: second argument must be a list, got: ${typeOf updates}'';
-      assert assertMsg (all (i: isInt i) indices) ''
-        UPDATING ARRAY MERGE: first argument must be a list of indices (integers) of items to update in the left-hand-side list, got: ${traceSeqN 1 indices "(see trace above)"}'';
-      assert assertMsg (length indices == length updates) ''
-        UPDATING ARRAY MERGE: for each index there must be one corresponding update value, got: ${traceSeqN 1 indices "(see first trace above)"} indices & ${traceSeqN 1 updates "(see second trace above)"} updates''; let
-        updated = listToAttrs (
-          zipListsWith (
-            idx: upd: {
-              name = toString idx;
-              value =
-                (
-                  mergeAt here
-                  {mergedListItem = elemAt orig idx;}
-                  {mergedListItem = upd;}
-                )
-                .mergedListItem;
-            }
-          )
-          indices
-          updates
-        );
+      # ------
+      # update
+      # ------
+      update = indices: updates: orig: here: let
+        inherit (builtins) length listToAttrs elemAt hasAttr;
+        inherit (nixlib.lib) zipListsWith imap0 assertMsg traceSeqN;
       in
-        imap0 (
-          i: v:
-            if hasAttr "${toString i}" updated
-            then updated.${toString i}
-            else elemAt orig i
-        )
-        orig;
-  };
+        assert assertMsg (length indices == length updates) ''
+          UPDATING ARRAY MERGE: for each index there must be one corresponding update value, got: ${traceSeqN 1 indices "(see first trace above)"} indices & ${traceSeqN 1 updates "(see second trace above)"} updates''; let
+          updated = listToAttrs (
+            zipListsWith (
+              idx: upd: {
+                name = toString idx;
+                value =
+                  (
+                    mergeAt here
+                    {mergedListItem = elemAt orig idx;}
+                    {mergedListItem = upd;}
+                  )
+                  .mergedListItem;
+              }
+            )
+            (list int indices)
+            (list any updates)
+          );
+        in
+          imap0 (
+            i: v:
+              if hasAttr "${toString i}" updated
+              then updated.${toString i}
+              else elemAt orig i
+          )
+          orig;
+      # ------
+    };
 }
