@@ -155,16 +155,18 @@
       # decorate
       # ------
       decorate = rhs: dec:
-        builtins.deepSeq
-        (decorateAt [] rhs dec) (decorateAt [] rhs dec);
+      # builtins.deepSeq
+      # (decorateAt [] rhs dec)
+      (decorateAt [] rhs dec);
       # ------
 
       # ------
       # merge
       # ------
       merge = lhs: rhs:
-        builtins.deepSeq
-        (mergeAt [] lhs rhs) (mergeAt [] lhs rhs);
+      # builtins.deepSeq
+      # (mergeAt [] lhs rhs)
+      (mergeAt [] lhs rhs);
       # ------
 
       # ------
