@@ -37,10 +37,16 @@
             singleton = head values;
             lhsFilePos = let
               lhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath lhs);
-            in "${lhsPos.file}:${toString lhsPos.line}:${toString lhsPos.column}";
+            in
+              if lhsPos != null
+              then "${lhsPos.file}:${toString lhsPos.line}:${toString lhsPos.column}"
+              else "undetectable posision";
             rhsFilePos = let
               rhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath rhs);
-            in "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}";
+            in
+              if rhsPos != null
+              then "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}"
+              else "undetectable posision";
           in
             if (isSingleton && isFunction singleton)
             then
@@ -113,10 +119,16 @@
             singleton = head values;
             lhsFilePos = let
               lhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath lhs);
-            in "${lhsPos.file}:${toString lhsPos.line}:${toString lhsPos.column}";
+            in
+              if lhsPos != null
+              then "${lhsPos.file}:${toString lhsPos.line}:${toString lhsPos.column}"
+              else "undetectable posision";
             rhsFilePos = let
               rhsPos = builtins.unsafeGetAttrPos n (getAttrFromPath attrPath rhs);
-            in "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}";
+            in
+              if rhsPos != null
+              then "${rhsPos.file}:${toString rhsPos.line}:${toString rhsPos.column}"
+              else "undetectable posision";
           in
             if isSingleton
             then
