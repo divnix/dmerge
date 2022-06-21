@@ -192,21 +192,22 @@
       # ------
       update = indices: updates: orig: here: let
         inherit (builtins) length listToAttrs elemAt hasAttr;
-        inherit (nixlib.lib) zipListsWith imap0 assertMsg traceSeqN;
+        inherit (nixlib.lib) zipListsWith imap0 assertMsg traceSeqN setAttrByPath getAttrFromPath;
       in
         assert assertMsg (length indices == length updates) ''
           UPDATING ARRAY MERGE: for each index there must be one corresponding update value, got: ${traceSeqN 1 indices "(see first trace above)"} indices & ${traceSeqN 1 updates "(see second trace above)"} updates''; let
           updated = listToAttrs (
             zipListsWith (
-              idx: upd: {
+              idx: upd: let
+                # manufacture a "here" for display purposes
+                tmplhs = setAttrByPath (here ++ [(toString idx)]) (elemAt orig idx);
+                tmprhs = setAttrByPath (here ++ [(toString idx)]) upd;
+              in {
                 name = toString idx;
-                value =
-                  (
-                    mergeAt here
-                    {mergedListItem = elemAt orig idx;}
-                    {mergedListItem = upd;}
-                  )
-                  .mergedListItem;
+                value = getAttrFromPath here (
+                  # but start from an empty here on this commissioned merge operation
+                  mergeAt [] tmplhs tmprhs
+                );
               }
             )
             (list int indices)
