@@ -188,6 +188,12 @@
       # ------
 
       # ------
+      # combine
+      # ------
+      combine = first: second: orig: here: (function second) ((function first) orig here) orig here;
+      # ------
+
+      # ------
       # update
       # ------
       update = indices: updates: orig: here: let
