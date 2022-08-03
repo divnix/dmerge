@@ -204,7 +204,7 @@
                 tmprhs = setAttrByPath (here ++ [(toString idx)]) upd;
               in {
                 name = toString idx;
-                value = getAttrFromPath here (
+                value = getAttrFromPath (here ++ [(toString idx)]) (
                   # but start from an empty here on this commissioned merge operation
                   mergeAt [] tmplhs tmprhs
                 );
