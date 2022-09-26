@@ -162,7 +162,7 @@
     in
       f here rhs lhs;
   in
-    with yants "data-merge"; {
+    with yants "data-merge"; rec {
       # ------
       # decorate
       # ------
@@ -221,6 +221,31 @@
               else elemAt orig i
           )
           orig;
+      # ------
+
+      # ------
+      # updateWhere
+
+      # a version of `update` that uses a predicate rather than an index to determine the values to update where:
+
+      # * if the predicate matches more than one value, then mutiple updated values may also be provided.
+
+      # * If more matches exist than updates provided then only the number of updates provided will be inserted,
+      #   and the rest of the matches will return unmodified.
+      # ------
+      updateWhere = pred: updates: orig: let
+        inherit (nixlib.lib) filter imap0 warn take length;
+
+        indexed = imap0 (i: v: {inherit i v;}) orig;
+        filtered =
+          filter (v: pred v.v) indexed;
+      in
+        if filtered == []
+        then warn "updateWhere -> no matching value found, returning unmodified list" update [] [] orig
+        else let
+          indices = map (v: v.i) filtered;
+        in
+          update (take (length updates) indices) updates orig;
       # ------
     };
 }
