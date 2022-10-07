@@ -163,6 +163,7 @@
       f here rhs lhs;
   in
     with yants "data-merge"; {
+      __functor = self: self.merge;
       # ------
       # decorate
       # ------
