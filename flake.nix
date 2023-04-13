@@ -1,8 +1,20 @@
 {
   description = "A mini merge DSL for data overlays";
   inputs.nixlib.url = "github:nix-community/nixpkgs.lib";
-  inputs.yants.url = "github:divnix/yants";
-  inputs.namaka.url = "github:nix-community/namaka";
+  inputs.yants = {
+    url = "github:divnix/yants";
+    inputs.nixpkgs.follows = "nixlib";
+  };
+
+  inputs.haumea = {
+    url = "github:nix-community/haumea";
+    inputs.nixpkgs.follows = "nixlib";
+  };
+  inputs.namaka = {
+    url = "github:nix-community/namaka";
+    inputs.haumea.follows = "haumea";
+    inputs.nixpkgs.follows = "nixlib";
+  };
 
   outputs = {
     self,
