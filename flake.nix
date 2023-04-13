@@ -39,7 +39,16 @@
     namaka,
     haumea,
   }: let
-    res = haumea.lib.load {src = ./src;};
+    inherit (haumea.lib.transformers) liftDefault;
+
+    res = haumea.lib.load {
+      src = ./src;
+      transformer = liftDefault;
+      inputs = {
+        inherit (nixlib) lib;
+        inherit yants;
+      };
+    };
     checks = namaka.lib.load {
       flake = self;
       inputs = res;

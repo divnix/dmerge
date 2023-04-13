@@ -1,6 +1,6 @@
 {lib}: let
   inherit (builtins) isAttrs hasAttr head tail typeOf concatStringsSep tryEval unsafeGetAttrPos;
-  inherit (nixlib.lib) zipAttrsWith isList isFunction getAttrFromPath;
+  inherit (lib) zipAttrsWith isList isFunction getAttrFromPath;
   #
   # decorateAt: takes a given right-hand side and allows you to decorate its arrays with
   # array merge instructions.
@@ -35,7 +35,7 @@ in
           then
             if hasAttr n rhs_ # rhs-singleton
             then
-              abort ''
+              throw ''
 
                 you can only decorate existing attr paths, the following doesn't exist in the decorated attrs
                 at '${concatStringsSep "." here'}':
@@ -47,7 +47,7 @@ in
             if (isList lhs' && isFunction rhs')
             then rhs' lhs'
             else
-              abort ''
+              throw ''
 
                 The only thing you can do is to decorate an attrs' list with a function decorator at '${concatStringsSep "." here'}':
                 - attrs: ${typeOf lhs'} @ ${lhsFilePos}

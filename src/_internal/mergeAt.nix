@@ -33,7 +33,7 @@ in
         in
           if (isSingleton && isFunction singleton)
           then
-            abort ''
+            throw ''
 
               a fresh right-hand-side cannot be an array merge function
               at '${concatStringsSep "." cursor'}':
@@ -48,7 +48,7 @@ in
           then
             if (typeOf lhs') != (typeOf rhs') && !(isList lhs' && isFunction rhs')
             then
-              abort ''
+              throw ''
 
                 rigt-hand-side must be of the same type as left-hand-side
                 at '${concatStringsSep "." cursor'}':
@@ -57,7 +57,7 @@ in
               ''
             else if isList lhs' && isList rhs'
             then
-              abort ''
+              throw ''
 
                 rigt-hand-side list is not allowed to override left-hand-side list,
                 this would break incrementality of the data spine. Use one of the array
@@ -77,7 +77,7 @@ in
               if ex.success
               then ex.value
               else
-                abort ''
+                throw ''
 
                   Array merge function error (see trace above the error line for details) on the right-hand-side:
                   - rhs: ${typeOf rhs'} @ ${rhsFilePos}
