@@ -2,10 +2,13 @@
   description = "A mini merge DSL for data overlays";
   inputs.nixlib.url = "github:nix-community/nixpkgs.lib";
   inputs.yants.url = "github:divnix/yants";
+  inputs.namaka.url = "github:nix-community/namaka";
+
   outputs = {
     self,
     nixlib,
     yants,
+    namaka,
   }: let
     # Incrementality of the Data Spine
     # --------------------------------
@@ -161,67 +164,75 @@
         [rhs_ lhs_];
     in
       f here rhs lhs;
+
+    inherit (nixlib.lib) fix;
   in
-    with yants "data-merge"; {
-      __functor = self: self.merge;
-      # ------
-      # decorate
-      # ------
-      decorate = rhs: dec:
-      # builtins.deepSeq
-      # (decorateAt [] rhs dec)
-      (decorateAt [] rhs dec);
-      # ------
+    with yants "data-merge";
+      fix (me: {
+        __functor = self: self.merge;
+        # ------
+        # decorate
+        # ------
+        decorate = rhs: dec:
+        # builtins.deepSeq
+        # (decorateAt [] rhs dec)
+        (decorateAt [] rhs dec);
+        # ------
 
-      # ------
-      # merge
-      # ------
-      merge = lhs: rhs:
-      # builtins.deepSeq
-      # (mergeAt [] lhs rhs)
-      (mergeAt [] lhs rhs);
-      # ------
+        # ------
+        # merge
+        # ------
+        merge = lhs: rhs:
+        # builtins.deepSeq
+        # (mergeAt [] lhs rhs)
+        (mergeAt [] lhs rhs);
+        # ------
 
-      # ------
-      # append
-      # ------
-      append = new: orig: here: orig ++ (list any new);
-      # ------
+        # ------
+        # append
+        # ------
+        append = new: orig: here: orig ++ (list any new);
+        # ------
 
-      # ------
-      # update
-      # ------
-      update = indices: updates: orig: here: let
-        inherit (builtins) length listToAttrs elemAt hasAttr;
-        inherit (nixlib.lib) zipListsWith imap0 assertMsg traceSeqN setAttrByPath getAttrFromPath;
-      in
-        assert assertMsg (length indices == length updates) ''
-          UPDATING ARRAY MERGE: for each index there must be one corresponding update value, got: ${traceSeqN 1 indices "(see first trace above)"} indices & ${traceSeqN 1 updates "(see second trace above)"} updates''; let
-          updated = listToAttrs (
-            zipListsWith (
-              idx: upd: let
-                # manufacture a "here" for display purposes
-                tmplhs = setAttrByPath (here ++ [(toString idx)]) (elemAt orig idx);
-                tmprhs = setAttrByPath (here ++ [(toString idx)]) upd;
-              in {
-                name = toString idx;
-                value = getAttrFromPath (here ++ [(toString idx)]) (
-                  # but start from an empty here on this commissioned merge operation
-                  mergeAt [] tmplhs tmprhs
-                );
-              }
-            )
-            (list int indices)
-            (list any updates)
-          );
+        # ------
+        # update
+        # ------
+        update = indices: updates: orig: here: let
+          inherit (builtins) length listToAttrs elemAt hasAttr;
+          inherit (nixlib.lib) zipListsWith imap0 assertMsg traceSeqN setAttrByPath getAttrFromPath;
         in
-          imap0 (
-            i: v:
-              if hasAttr "${toString i}" updated
-              then updated.${toString i}
-              else elemAt orig i
-          )
-          orig;
-      # ------
-    };
+          assert assertMsg (length indices == length updates) ''
+            UPDATING ARRAY MERGE: for each index there must be one corresponding update value, got: ${traceSeqN 1 indices "(see first trace above)"} indices & ${traceSeqN 1 updates "(see second trace above)"} updates''; let
+            updated = listToAttrs (
+              zipListsWith (
+                idx: upd: let
+                  # manufacture a "here" for display purposes
+                  tmplhs = setAttrByPath (here ++ [(toString idx)]) (elemAt orig idx);
+                  tmprhs = setAttrByPath (here ++ [(toString idx)]) upd;
+                in {
+                  name = toString idx;
+                  value = getAttrFromPath (here ++ [(toString idx)]) (
+                    # but start from an empty here on this commissioned merge operation
+                    mergeAt [] tmplhs tmprhs
+                  );
+                }
+              )
+              (list int indices)
+              (list any updates)
+            );
+          in
+            imap0 (
+              i: v:
+                if hasAttr "${toString i}" updated
+                then updated.${toString i}
+                else elemAt orig i
+            )
+            orig;
+        # ------
+
+        checks = namaka.lib.load {
+          flake = self;
+          inputs = {inherit (me) merge decorate update updateOn append;};
+        };
+      });
 }
