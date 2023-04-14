@@ -1,2 +1,2 @@
 #json
-{"a":[{"name":"foo","value":"barr"},{"name":"baz","value":"qux"}]}
+{"nok-LhsDupliate":{"success":false,"value":false},"nok-RhsDupliate":{"success":false,"value":false},"ok":{"success":true,"value":{"a":[{"name":"foo","value":"barr"},{"name":"baz","value":"qux"}]}}}

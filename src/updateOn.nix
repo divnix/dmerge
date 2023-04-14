@@ -4,7 +4,7 @@
   lib,
 }:
 with yants "dmerge/updateOn"; let
-  inherit (lib) assertMsg isAttrs all foldl' traceSeqN setAttrByPath getAttrFromPath;
+  inherit (lib) assertMsg isAttrs all foldl' traceSeqN setAttrByPath getAttrFromPath unique length;
   inherit (lib.generators) toPretty;
 
   inherit (root.internal) mergeAt;
@@ -15,7 +15,7 @@ in
         acc: new: (
           if acc ? ${new.${key}}
           then
-            abort ''
+            throw ''
               The key '${new.${key}}' must be unique in the update array, got: ${traceSeqN 2 updates ""}
             ''
           else acc // {"${new.${key}}" = new;}
@@ -35,6 +35,9 @@ in
     assert assertMsg (all (u: u ? ${key}) updates) ''
       UPDATING ASSOCIATIVE ARRAY: all items of the right hand side of an associative
       array merged must contain attribute sets with a key ${key}, got: ${traceSeqN 2 updates ""}'';
+    assert assertMsg (length (map (o: o.${key}) orig) == (length (unique (map (o: o.${key}) orig)))) ''
+      UPDATING ASSOCIATIVE ARRAY: keys of the left hand side of an associative
+      array merged must be unique on ${key}, got: ${traceSeqN 2 orig ""}'';
       map (o: (
         if updateset ? ${o.${key}}
         then

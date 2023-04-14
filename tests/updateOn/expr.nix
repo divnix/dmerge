@@ -23,5 +23,16 @@
       }
     ];
   };
+
+  lhs' = {a = [{name = "duplicate";} {name = "duplicate";}];};
+  rhs' = {a = updateOn "name" [{name = "duplicate";} {name = "duplicate";}];};
+
+  merged = {
+    ok = merge lhs rhs;
+    nok-LhsDupliate = merge lhs' rhs;
+    nok-RhsDupliate = merge lhs rhs';
+  };
+
+  inherit (builtins) deepSeq mapAttrs tryEval;
 in
-  merge lhs rhs
+  mapAttrs (_: x: tryEval (deepSeq x x)) merged
