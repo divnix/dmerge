@@ -9,10 +9,6 @@ command = "prettier"
 options = ["--plugin", "prettier-plugin-toml", "--write"]
 includes = ["*.md", "*.yaml", "*.toml"]
 
-[formatter.black]
-command = "black"
-includes = ["*.py"]
-
 [formatter.shell]
 command = "shfmt"
 options = [

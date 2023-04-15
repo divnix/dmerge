@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install nix
+        uses: nixbuild/nix-quick-install-action@v22
+
+      - name: Run checks
+        run: nix flake check
+
+      # go away with: https://github.com/numtide/treefmt/issues/232
+      - name: Install Alejandra
+        run: nix profile install nixpkgs#alejandra
+      - name: Install Shfmt
+        run: nix profile install nixpkgs#shfmt
+      - name: Install Prettier
+        run: nix profile install nixpkgs#nodePackages.prettier
+      - name: Install Prettier Plugin for TOML
+        run: nix profile install nixpkgs#nodePackages.prettier-plugin-toml
+      # gone :-)
+
+      - name: Check formatting
+        run: nix run nixpkgs#treefmt -- . --fail-on-change --no-cache
