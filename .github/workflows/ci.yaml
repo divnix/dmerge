@@ -16,6 +16,8 @@ jobs:
 
       - name: Install nix
         uses: nixbuild/nix-quick-install-action@v22
+        with:
+          nix_conf: experimental-features = nix-command flakes
 
       - name: Run checks
         run: nix flake check

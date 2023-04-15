@@ -88,7 +88,7 @@ This repo has no `flake.lock`. Chose the dependencies you see fit; assert compat
   inputs.dmerge = {
     url = "github:divnix/dmerge";
     inputs.nixpkgs.follows = "nixpkgs";
-    inputs.namaka.url = "github:divnix/blank"; # testing only dependency
+    inputs.namaka.follows = ""; # testing only dependency
   };
 
   /* ... */
@@ -100,3 +100,4 @@ This repo has no `flake.lock`. Chose the dependencies you see fit; assert compat
 - [Haumea](https://github.com/nix-community/haumea) for help me chore
 - [Namaka](https://github.com/nix-community/namaka) for testing-made-easy (tm)
 - [Cocogitto](https://github.com/cocogitto/cocogitto) for taking the guesswork out of releases (tbd)
+- [nix-quick-install-action](https://github.com/nixbuild/nix-quick-install-action) for making nix in CI a sure quick thing
