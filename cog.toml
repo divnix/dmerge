@@ -1,0 +1,14 @@
+post_bump_hooks = [
+  "git push",
+  "git push origin {{version}}",
+  "echo Go to and post: https://discourse.nixos.org/t/dmerge-a-mini-dsl-for-data/27314",
+  "cog -q changelog --at {{version}}",
+]
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "dmerge"
+owner = "divnix"
+authors = [{ username = "blaggacao", signature = "David Arnold" }]
