@@ -17,10 +17,9 @@ It aims to give you alternative semantics, currently not available in the ecosys
 ```nix
 # nix repl
 
-> :a (builtins.getFlake "github:nix-community/nixpkgs.lib").lib
 > :a builtins.getFlake "github:divnix/dmerge"
 
-> :p { foo = "bar"; } { foo = "baz"; }
+> :p merge { foo = "bar"; } { foo = "baz"; }
 { foo = "baz"; }
 
 > :p merge { foo = [1]; } { foo = append [2]; }
