@@ -16,25 +16,30 @@
         ));
     inherit (lib.stringsWithDeps) noDepEntry;
   in {
-    devShells = eachSystem (pkgs: {
-      default = pkgs.devshell.mkShell {
-        name = "Data Merge";
-        commands = [
-          {package = pkgs.treefmt;}
-          {package = pkgs.namaka;}
-        ];
+    devShells = eachSystem (pkgs: let
+      checkMod = {
+        commands = [{package = pkgs.treefmt;}];
         packages = [
           pkgs.alejandra
           pkgs.shfmt
           pkgs.nodePackages.prettier
           pkgs.nodePackages.prettier-plugin-toml
-          pkgs.python3Packages.black
         ];
         devshell.startup.nodejs-setuphook = noDepEntry ''
           export NODE_PATH=${
             pkgs.nodePackages.prettier-plugin-toml
           }/lib/node_modules:$NODE_PATH
         '';
+      };
+    in {
+      check = pkgs.devshell.mkShell {
+        name = "Data Merge (Check)";
+        imports = [checkMod];
+      };
+      default = pkgs.devshell.mkShell {
+        name = "Data Merge";
+        imports = [checkMod];
+        commands = [{package = pkgs.namaka;}];
       };
     });
   };
