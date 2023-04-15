@@ -39,7 +39,13 @@
       default = pkgs.devshell.mkShell {
         name = "Data Merge";
         imports = [checkMod];
-        commands = [{package = pkgs.namaka;}];
+        commands = [
+          {package = pkgs.namaka;}
+          {
+            package = pkgs.cocogitto;
+            name = "cog";
+          }
+        ];
       };
     });
   };
