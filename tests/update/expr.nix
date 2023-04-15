@@ -1,17 +1,36 @@
 {
   merge,
   update,
+  append,
 }: let
-  lhs.a.b = [{c = "c";}];
-  rhs.a.b = update [0] [{c = "bc";}];
-
-  rhs'.a.b = update [1] [{c = "bc";}];
-  rhs_.a.b = update [1] [{c = "bc";} {}];
-
   merged = {
-    ok = merge lhs rhs;
-    nok-WrongIndex = merge lhs rhs';
-    nok-InstructionMismatch = merge lhs rhs_;
+    ok =
+      merge {
+        a.b = [
+          {c = "c";} # 0
+        ];
+      } {
+        a.b = update [0] [
+          {c = "bc";}
+        ];
+      };
+    ok2 =
+      merge {
+        "foo.yaml" = {bar = [];};
+      } {
+        "foo.yaml" = {bar = append [1];};
+      };
+    nok-WrongIndex =
+      merge {
+        a = [
+          {} # 0
+        ];
+      } {
+        a = update [1] [{}];
+      };
+    nok-InstructionMismatch = merge {a = [{}];} {
+      a = update [0] [{} {}];
+    };
   };
 
   inherit (builtins) deepSeq mapAttrs tryEval;
