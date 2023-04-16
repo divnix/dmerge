@@ -1,8 +1,10 @@
 # One CLI to format the code tree - https://github.com/numtide/treefmt
+[global]
+excludes = ["CHANGELOG.md"]
+
 [formatter.nix]
 command = "alejandra"
 includes = ["*.nix"]
-excludes = ["./cells/cardano/packages/materialized/*"]
 
 [formatter.prettier]
 command = "prettier"

@@ -19,6 +19,22 @@
         "type": "github"
       }
     },
+    "flake-compat": {
+      "locked": {
+        "lastModified": 1681615974,
+        "narHash": "sha256-rEt57OJm0UbxfzaZGSBJoBMy3P62OSDKgzWW2CSqJ+8=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "3ae3af556f3a904774620306e2236e02deb55f6d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "ref": "refs/pull/55/head",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1642700792,
@@ -34,25 +50,9 @@
         "type": "github"
       }
     },
-    "flake-utils_2": {
-      "locked": {
-        "lastModified": 1644229661,
-        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "haumea": {
       "inputs": {
         "nixpkgs": [
-          "main",
           "namaka",
           "nixpkgs"
         ]
@@ -72,54 +72,22 @@
         "type": "github"
       }
     },
-    "main": {
-      "inputs": {
-        "namaka": "namaka",
-        "nixlib": "nixlib",
-        "yants": "yants"
-      },
-      "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-3h/UfZpenCIf/ZixrB309aP5MVBAi/TunhiFEx2eeqQ=",
-        "path": "../.",
-        "type": "path"
-      },
-      "original": {
-        "path": "../.",
-        "type": "path"
-      }
-    },
     "namaka": {
       "inputs": {
         "haumea": "haumea",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1681234038,
-        "narHash": "sha256-ErGxUoVrSeoMbWudiGYKCvlFM4u1MpTHyJknhveqFG4=",
+        "lastModified": 1681604203,
+        "narHash": "sha256-oA/fW/85GmSNprghgAnZi0XeVMvW9xVuCYprzPw2hz0=",
         "owner": "nix-community",
         "repo": "namaka",
-        "rev": "f6de84436eebc1c1d152c384133b119231c09a4a",
+        "rev": "1550ddc025334cff2e8ec9021256473b2ffb27e5",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "namaka",
-        "type": "github"
-      }
-    },
-    "nixlib": {
-      "locked": {
-        "lastModified": 1681001314,
-        "narHash": "sha256-5sDnCLdrKZqxLPK4KA8+f4A3YKO/u6ElpMILvX0g72c=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "367c0e1086a4eb4502b24d872cea2c7acdd557f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
         "type": "github"
       }
     },
@@ -157,21 +125,6 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1660438583,
-        "narHash": "sha256-rJUTYxFKlWUJI3njAwEc1pKAVooAViZGJvsgqfh/q/E=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "bbd8f7cd87d0b29294ef3072ffdbd61d60f05da4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
         "lastModified": 1681358109,
         "narHash": "sha256-eKyxW4OohHQx9Urxi7TQlFBTDWII+F+x2hklDOQPB50=",
         "owner": "nixos",
@@ -186,30 +139,28 @@
         "type": "github"
       }
     },
-    "root": {
-      "inputs": {
-        "devshell": "devshell",
-        "flake-utils": "flake-utils_2",
-        "main": "main",
-        "nixpkgs": "nixpkgs_4"
-      }
-    },
-    "yants": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_3"
-      },
+    "nosys": {
       "locked": {
-        "lastModified": 1677285314,
-        "narHash": "sha256-hlAcg2514zKrPu8jn24BUsIjjvXvCLdw1jvKgBTpqko=",
+        "lastModified": 1668010795,
+        "narHash": "sha256-JBDVBnos8g0toU7EhIIqQ1If5m/nyBqtHhL3sicdPwI=",
         "owner": "divnix",
-        "repo": "yants",
-        "rev": "9eab24b273ce021406c852166c216b86e2bb4ec4",
+        "repo": "nosys",
+        "rev": "feade0141487801c71ff55623b421ed535dbdefa",
         "type": "github"
       },
       "original": {
         "owner": "divnix",
-        "repo": "yants",
+        "repo": "nosys",
         "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "devshell": "devshell",
+        "flake-compat": "flake-compat",
+        "namaka": "namaka",
+        "nixpkgs": "nixpkgs_3",
+        "nosys": "nosys"
       }
     }
   },
