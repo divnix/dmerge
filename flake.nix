@@ -11,7 +11,7 @@
     inputs.nixpkgs.follows = "nixlib";
   };
   inputs.namaka = {
-    url = "github:nix-community/namaka";
+    url = "github:nix-community/namaka/v0.1.1";
     inputs.haumea.follows = "haumea";
     inputs.nixpkgs.follows = "nixlib";
   };
@@ -50,7 +50,7 @@
       };
     };
     checks = namaka.lib.load {
-      flake = self;
+      src = ./tests;
       inputs = res;
     };
   in
