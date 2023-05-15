@@ -2,22 +2,20 @@
   merge,
   prepend,
 }: let
-  lhs.a.b = ["last"];
-  rhs.a.b = prepend ["first"];
+  lhs = {
+    a.b = ["last"];
+  };
 
-  rhs'.a.c = prepend [""];
+  ok = {
+    NormalMerge = merge lhs {a.b = prepend ["first"];};
+    FreshRHSWithArrayMerge = merge lhs {a.new = prepend ["new"];};
+  };
 
-  villain.a.c = throw;
-
-  incomplete.a.c = x: x;
-
-  merged = {
-    ok = merge lhs rhs;
-    nok-FreshRHSNotValue = merge lhs rhs';
-    nok-VillainMergeFunc = merge lhs villain;
-    nok-IncompleteArrayMergFunc = merge lhs incomplete;
+  nok = {
+    VillainMergeFunc = merge lhs {a.new = throw "";};
+    PartialMergeFunc = merge lhs {a.new = x: x;};
   };
 
   inherit (builtins) deepSeq mapAttrs tryEval;
 in
-  mapAttrs (_: x: tryEval (deepSeq x x)) merged
+  ok // (mapAttrs (_: x: tryEval (deepSeq x x)) nok)

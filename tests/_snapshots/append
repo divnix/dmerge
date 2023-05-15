@@ -1,2 +1,2 @@
 #json
-{"nok-FreshRHSNotValue":{"success":false,"value":false},"nok-IncompleteArrayMergFunc":{"success":false,"value":false},"nok-VillainMergeFunc":{"success":false,"value":false},"ok":{"success":true,"value":{"a":{"b":["c"]}}}}
+{"FreshRHSWithArrayMerge":{"a":{"b":[],"new":["c"]}},"NormalMerge":{"a":{"b":["c"]}},"PartialMergeFunc":{"success":false,"value":false},"VillainMergeFunc":{"success":false,"value":false}}

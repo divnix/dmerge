@@ -9,9 +9,27 @@
   #   [ String ] -> lhs -> rhs -> merged
   #
 
-  tryArrayMerge = cr: lhs: rhs: rhsFilePos:
-    assert !(typeOf lhs == "list") -> throw "lhs is not a list, but a ${typeOf lhs}";
-    assert !(isFunction rhs) -> throw "rhs is not a function, but a ${typeOf rhs}"; let
+  tryArrayMerge = cr: lhs: rhs: rhsFilePos: lhsFilePos:
+    assert !(typeOf lhs == "list")
+    -> throw ''
+
+      During an attempted array merge, left-hand-side is not a list:
+      - lhs: ${typeOf lhs} @ ${lhsFilePos}
+    '';
+    assert !(isFunction rhs)
+    -> throw ''
+
+      During an attempted array merge, right-hand-side is not a function:
+      - rhs: ${typeOf rhs} @ ${rhsFilePos}
+    '';
+    assert !(isFunction (rhs lhs))
+    -> throw ''
+
+      During an attempted array merge, the result of left-hand-side applied to right-hand-side is not a function:
+      - lhs: ${typeOf lhs} @ ${lhsFilePos}
+      - rhs: ${typeOf rhs} @ ${rhsFilePos}
+      - (rhs lhs): ${typeOf (rhs lhs)}
+    ''; let
       ex = tryEval (rhs lhs cr);
     in
       if ex.success
@@ -46,13 +64,7 @@ in
             else "undetectable posision";
         in
           if (isSingleton && isFunction singleton)
-          then
-            throw ''
-
-              a fresh right-hand-side cannot be an array merge function
-              at '${concatStringsSep "." cursor'}':
-                - rhs: ${typeOf rhs'} @ ${rhsFilePos}
-            ''
+          then tryArrayMerge cursor' [] rhs' rhsFilePos lhsFilePos # empty lhs
           else if isSingleton
           then
             if (isAttrs singleton) # descend if it's an attrset
@@ -85,7 +97,7 @@ in
               ''
             # array function merge
             else if isList lhs' && isFunction rhs'
-            then tryArrayMerge cursor' lhs' rhs' rhsFilePos
+            then tryArrayMerge cursor' lhs' rhs' rhsFilePos lhsFilePos
             else rhs'
           else f cursor' values
       );
