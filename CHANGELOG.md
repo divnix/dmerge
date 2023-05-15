@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.2.0](https://github.com/divnix/dmerge/compare/0.1.0..0.2.0) - 2023-05-15
+#### Documentation
+- don't need lib in the repl to play - ([43d9d71](https://github.com/divnix/dmerge/commit/43d9d71b72ab7593cbe564d02536514c41c66302)) - [@blaggacao](https://github.com/blaggacao)
+#### Features
+- allow fresh rhs with prepend/append - ([06a9451](https://github.com/divnix/dmerge/commit/06a9451df16a6f127c9dff89f5e2c5213d9ef7d8)) - [@blaggacao](https://github.com/blaggacao)
+- add prepend function - ([1e0d48f](https://github.com/divnix/dmerge/commit/1e0d48f784ef68daf963e9802a22b84c4c42f3f8)) - [@blaggacao](https://github.com/blaggacao)
+- add cog file - ([e9013f2](https://github.com/divnix/dmerge/commit/e9013f296f0effe761bad6d4bd8861b8070c14ec)) - [@blaggacao](https://github.com/blaggacao)
+#### Miscellaneous Chores
+- adapt to namaka changes - ([8fddbab](https://github.com/divnix/dmerge/commit/8fddbabfbaa3b9d7c3793e36cea5dd679a84dc72)) - figsoda
+- adpot parent flake pattern that survives CI - ([4d54735](https://github.com/divnix/dmerge/commit/4d547351cac82814800d562f0f13686eb63077d9)) - [@blaggacao](https://github.com/blaggacao)
+- cleanup - ([2602e1b](https://github.com/divnix/dmerge/commit/2602e1b6af505941c4aaecf2ca144360102eee06)) - [@blaggacao](https://github.com/blaggacao)
+#### Refactoring
+- prepare array merge function value initialization - ([fbbb475](https://github.com/divnix/dmerge/commit/fbbb4750dd53df70be1e68b279f46637c23711f2)) - [@blaggacao](https://github.com/blaggacao)
+
+- - -
+
 ## 0.1.0 - 2023-04-15
 #### Bug Fixes
 - disallow duplicate keys for mergeOn on LHS as well - (8bc84e2) - David Arnold
