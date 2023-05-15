@@ -8,6 +8,20 @@
   # Type:
   #   [ String ] -> lhs -> rhs -> merged
   #
+
+  tryArrayMerge = cr: lhs: rhs: rhsFilePos:
+    assert !(typeOf lhs == "list") -> throw "lhs is not a list, but a ${typeOf lhs}";
+    assert !(isFunction rhs) -> throw "rhs is not a function, but a ${typeOf rhs}"; let
+      ex = tryEval (rhs lhs cr);
+    in
+      if ex.success
+      then ex.value
+      else
+        throw ''
+
+          Array merge function error (see trace above the error line for details) on the right-hand-side:
+          - rhs: ${typeOf rhs} @ ${rhsFilePos}
+        '';
 in
   cursor: lhs: rhs: let
     f = attrPath:
@@ -71,17 +85,7 @@ in
               ''
             # array function merge
             else if isList lhs' && isFunction rhs'
-            then let
-              ex = tryEval (rhs' lhs' cursor');
-            in
-              if ex.success
-              then ex.value
-              else
-                throw ''
-
-                  Array merge function error (see trace above the error line for details) on the right-hand-side:
-                  - rhs: ${typeOf rhs'} @ ${rhsFilePos}
-                ''
+            then tryArrayMerge cursor' lhs' rhs' rhsFilePos
             else rhs'
           else f cursor' values
       );
