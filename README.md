@@ -25,6 +25,9 @@ It aims to give you alternative semantics, currently not available in the ecosys
 > :p merge { foo = [1]; } { foo = append [2]; }
 { foo = [ 1 2 ]; }
 
+> :p merge { foo = [1]; } { foo = prepend [2]; }
+{ foo = [ 2 1 ]; }
+
 # update [idx] updates idx on lhs
 > :p merge { foo = [1]; } { foo = update [0] [2]; }
 { foo = [ 2 ]; }
