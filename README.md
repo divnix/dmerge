@@ -61,7 +61,7 @@ consider better factorizing your left hand side, instead. It's a symptom of poor
 ### Expressive Array Merge Decorations
 
 In the above examples prooving its simplicity, you already got to know the full instruction set
-of Dmerge to specify the array merge strategy on the right hand side: `append`, `update` & `updateOn`.
+of Dmerge to specify the array merge strategy on the right hand side: `append`, `prepend`, `update` & `updateOn`.
 
 If you don't control the right hand side, but know it's structure, you can `decorate` it:
 
