@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.2.1](https://github.com/divnix/dmerge/compare/0.2.0..0.2.1) - 2023-06-15
+#### Bug Fixes
+- use new namaka in local flake only - ([60a2624](https://github.com/divnix/dmerge/commit/60a26246df9664334d89817cf12eb31c8655bdb9)) - [@blaggacao](https://github.com/blaggacao)
+#### Documentation
+- utilize cool repl command - ([a740c56](https://github.com/divnix/dmerge/commit/a740c5632789ff872a54a5b6595ef07287ff273e)) - figsoda
+- fix oversight in readme - ([eef0a89](https://github.com/divnix/dmerge/commit/eef0a89bb2efa7296317ce5e42e81964f6ae137d)) - [@blaggacao](https://github.com/blaggacao)
+
+- - -
+
 ## [0.2.0](https://github.com/divnix/dmerge/compare/0.1.0..0.2.0) - 2023-05-15
 #### Documentation
 - don't need lib in the repl to play - ([43d9d71](https://github.com/divnix/dmerge/commit/43d9d71b72ab7593cbe564d02536514c41c66302)) - [@blaggacao](https://github.com/blaggacao)
