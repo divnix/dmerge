@@ -7,12 +7,7 @@
   };
 
   inputs.haumea = {
-    url = "github:nix-community/haumea";
-    inputs.nixpkgs.follows = "nixlib";
-  };
-  inputs.namaka = {
-    url = "github:nix-community/namaka/v0.1.1";
-    inputs.haumea.follows = "haumea";
+    url = "github:nix-community/haumea/v0.2.2";
     inputs.nixpkgs.follows = "nixlib";
   };
   # Incrementality of the Data Spine
@@ -36,12 +31,11 @@
     self,
     nixlib,
     yants,
-    namaka,
     haumea,
   }: let
     inherit (haumea.lib.transformers) liftDefault;
-
-    res = haumea.lib.load {
+  in
+    haumea.lib.load {
       src = ./src;
       transformer = liftDefault;
       inputs = {
@@ -49,10 +43,4 @@
         inherit yants;
       };
     };
-    checks = namaka.lib.load {
-      src = ./tests;
-      inputs = res;
-    };
-  in
-    res // {inherit checks;};
 }
