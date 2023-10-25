@@ -2,7 +2,7 @@
 
 A mini merge DSL for data overlays.
 
-Dmerge is a lightweight alterantive to the NixOS module system to wrangle data.
+Dmerge is a lightweight alternative to the NixOS module system to wrangle data.
 It aims to give you alternative semantics, currently not available in the ecosystem, when you need them.
 
 ## Semantics
